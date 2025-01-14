@@ -169,7 +169,7 @@ PlayerSettings:
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 23
+  AndroidMinSdkVersion: 22
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
@@ -724,10 +724,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
-  scriptingDefineSymbols:
-    Android: USE_INPUT_SYSTEM_POSE_CONTROL;USE_STICK_CONTROL_THUMBSTICKS
-    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;USE_STICK_CONTROL_THUMBSTICKS
-    Windows Store Apps: USE_INPUT_SYSTEM_POSE_CONTROL;USE_STICK_CONTROL_THUMBSTICKS
+  scriptingDefineSymbols: {}
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
@@ -834,7 +831,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 2
+  activeInputHandler: 0
   windowsGamepadBackendHint: 0
   cloudProjectId: 02bf0e80-96cc-4238-af9e-2519c6b5364f
   framebufferDepthMemorylessMode: 0
