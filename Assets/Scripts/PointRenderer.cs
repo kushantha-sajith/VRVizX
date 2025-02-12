@@ -15,9 +15,11 @@ public class PointRenderer : MonoBehaviour
     private int column3;
     private int numberOfClusters;
     private string outliersBool;
+    private string dataPointColor;
+    private string outlierColorVal;
 
     // Method to set axis columns from UI
-    public void SetAxisColumns(int xAxis, int yAxis, int zAxis, string outlier, int cluster)
+    public void SetAxisColumns(int xAxis, int yAxis, int zAxis, string outlier, int cluster, string color, string outlierColorValue, float dataPointScale)
     {
         column1 = xAxis;
         column2 = yAxis;
@@ -26,7 +28,11 @@ public class PointRenderer : MonoBehaviour
         numberOfClusters = cluster;
         outliersBool = outlier;
 
-        Debug.Log("Axis columns are " + column1 + " " + column2 + " " + column3 + ", outlier: " + outliersBool + ", cluster: " + numberOfClusters);
+        dataPointColor = color;
+        outlierColorVal = outlierColorValue;
+        pointScale = dataPointScale;
+
+        Debug.Log("Axis columns are " + column1 + " " + column2 + " " + column3 + ", outlier: " + outliersBool + ", cluster: " + numberOfClusters + ", color: " + dataPointColor + ", outlierColor: " + outlierColorVal + ", point scale: " + pointScale);
     }
 
     //********Public Variables********

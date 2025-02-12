@@ -125,7 +125,7 @@ public class ScatterplotPointUIHandler : MonoBehaviour
         if (interactor is XRBaseControllerInteractor controllerInteractor)
         {
             // Trigger haptic feedback
-            controllerInteractor.SendHapticImpulse(0.5f, 0.2f); // Amplitude: 0.5, Duration: 0.2 seconds
+            controllerInteractor.SendHapticImpulse(0.3f, 0.1f); // Amplitude: 0.5, Duration: 0.2 seconds
         }
     }
 }

@@ -44,7 +44,7 @@ public class generateMenu : MonoBehaviour
 
         // Find the scatterplot script and pass the selected values
         PointRenderer pointRenderer = plotter.GetComponent<PointRenderer>();
-        pointRenderer.SetAxisColumns(xAxis, yAxis, zAxis, outlier, cluster);
+        pointRenderer.SetAxisColumns(xAxis, yAxis, zAxis, outlier, cluster, "", "", 0.25f);
 
         Debug.Log("Generating chart with x: " + xAxis + ", y: " + yAxis + ", z: " + zAxis + ", outlier: " + outlier + ", cluster: " + cluster);
 
