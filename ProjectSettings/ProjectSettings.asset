@@ -836,11 +836,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 02bf0e80-96cc-4238-af9e-2519c6b5364f
+  cloudProjectId: 910d32ed-7ef8-4522-9813-e09c4a48a14b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: New Unity Project
-  organizationId: prinz-eugn
+  projectName: Scatterplot_Standalone
+  organizationId: kushiyaa
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   hmiLoadingImage: {fileID: 0}

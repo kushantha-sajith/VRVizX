@@ -3,13 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 // This script gets values from CSVReader script
 // It instantiates points and particles according to values read
-
 public class PointRenderer : MonoBehaviour
 {
-
     private int column1;
     private int column2;
     private int column3;
@@ -17,23 +14,7 @@ public class PointRenderer : MonoBehaviour
     private string outliersBool;
     private string dataPointColor;
     private string outlierColorVal;
-
-    // Method to set axis columns from UI
-    public void SetAxisColumns(int xAxis, int yAxis, int zAxis, string outlier, int cluster, string color, string outlierColorValue, float dataPointScale)
-    {
-        column1 = xAxis;
-        column2 = yAxis;
-        column3 = zAxis;
-
-        numberOfClusters = cluster;
-        outliersBool = outlier;
-
-        dataPointColor = color;
-        outlierColorVal = outlierColorValue;
-        pointScale = dataPointScale;
-
-        Debug.Log("Axis columns are " + column1 + " " + column2 + " " + column3 + ", outlier: " + outliersBool + ", cluster: " + numberOfClusters + ", color: " + dataPointColor + ", outlierColor: " + outlierColorVal + ", point scale: " + pointScale);
-    }
+    private Dictionary<string, Color> colorMap;
 
     //********Public Variables********
 
@@ -104,7 +85,27 @@ public class PointRenderer : MonoBehaviour
 
     private List<int> outlierIndices = new List<int>();
 
+    public GameObject scatterPlot;
+
     //********Methods********
+    // Method to set axis columns from UI
+    public void SetAxisColumns(int xAxis, int yAxis, int zAxis, string outlier, int cluster, string color, string outlierColorValue, float dataPointScale)
+    {
+        column1 = xAxis;
+        column2 = yAxis;
+        column3 = zAxis;
+
+        numberOfClusters = cluster;
+        outliersBool = outlier;
+
+        dataPointColor = color;
+        outlierColorVal = outlierColorValue;
+        pointScale = dataPointScale;
+
+        Debug.Log("Axis columns are " + column1 + " " + column2 + " " + column3 + ", outlier: " + outliersBool + ", cluster: " + numberOfClusters + ", color: " + dataPointColor + ", outlierColor: " + outlierColorVal + ", point scale: " + pointScale);
+        scatterPlot.SetActive(true);
+        Start();
+}
 
     void Awake()
     {
@@ -127,8 +128,50 @@ public class PointRenderer : MonoBehaviour
         }
     }
 
+
     // Use this for initialization
     void Start()
+    {
+        colorMap = new Dictionary<string, Color>
+        {
+            { "Black", Color.black },
+            { "White", Color.white },
+            { "Red", Color.red },
+            { "Green", Color.green },
+            { "Blue", Color.blue },
+            { "Yellow", Color.yellow },
+            { "Cyan", Color.cyan },
+            { "Magenta", Color.magenta },
+            { "Gray", Color.gray },
+            { "Purple", Color.magenta },
+            { "Brown", new Color(0.6f, 0.3f, 0) },
+            { "Pink", new Color(1, 0.5f, 0.5f) },
+            { "Turquoise", new Color(0.25f, 1, 0.75f) },
+            { "Gold", new Color(1, 0.85f, 0) },
+            { "Lime", new Color(0.75f, 1, 0) },
+            { "Teal", new Color(0, 0.5f, 0.5f) },
+            { "Indigo", new Color(0.25f, 0, 1) },
+            { "Violet", new Color(0.5f, 0, 0.5f) },
+            { "Maroon", new Color(0.5f, 0, 0) },
+            { "Olive", new Color(0.5f, 0.5f, 0) },
+            { "Navy", new Color(0, 0, 0.5f) },
+            { "Beige", new Color(0.96f, 0.96f, 0.86f) },
+            { "Mint", new Color(0.74f, 0.99f, 0.79f) },
+            { "Peach", new Color(1, 0.9f, 0.71f) },
+            { "Lavender", new Color(0.9f, 0.9f, 0.98f) },
+            { "Salmon", new Color(0.98f, 0.5f, 0.45f) },
+            { "Khaki", new Color(0.94f, 0.9f, 0.55f) },
+            { "Coral", new Color(1, 0.5f, 0.31f) },
+            { "Aqua", new Color(0, 1, 1) },
+            { "Fuchsia", new Color(1, 0, 1) },
+            { "Ivory", new Color(1, 1, 0.94f) }
+        };
+        Debug.Log("Before GenerateChart()");
+        GenerateChart();
+        Debug.Log("After GenerateChart()");
+    }
+
+    private void GenerateChart()
     {
         ClearScatterplot();
 
@@ -309,12 +352,28 @@ public class PointRenderer : MonoBehaviour
             if (renderPrefabsWithColor == true)
             {
                 // Sets color according to x/y/z value
-                dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
+                //dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
+                if (dataPointColor == "Default")
+                {
+                    dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
+                }
+                else
+                {
+                    dataPoint.GetComponent<Renderer>().material.color = colorMap[dataPointColor];
+                }
 
                 // Activate emission color keyword so we can modify emission color
                 dataPoint.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
 
-                dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(x, y, z, 1.0f));
+                if (dataPointColor == "Default")
+                {
+                    dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(x, y, z, 1.0f));
+                }
+                else
+                {
+                    dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", colorMap[dataPointColor]);
+                }
+                
 
             }
         }
@@ -337,14 +396,18 @@ public class PointRenderer : MonoBehaviour
             float y = (Convert.ToSingle(pointList[i][yColumnName]) - yMin) / (yMax - yMin);
             float z = (Convert.ToSingle(pointList[i][zColumnName]) - zMin) / (zMax - zMin);
 
-            // Debug.Log("Position is " + x + y + z);
-
             // Set point location
             particlePoints[i].position = new Vector3(x, y, z) * plotScale;
 
-            //GlowColor = 
-            // Set point color
-            particlePoints[i].startColor = new Color(x, y, z, 1.0f);
+            if (dataPointColor == "Default")
+            {
+                particlePoints[i].startColor = new Color(x, y, z, 1.0f);
+            }
+            else
+            {
+                particlePoints[i].startColor = colorMap[dataPointColor];
+            }
+
             particlePoints[i].startSize = particleScale;
         }
 
@@ -632,15 +695,39 @@ public class PointRenderer : MonoBehaviour
                 // Check if the point is an outlier
                 if (outlierIndices.Contains(i))
                 {
-                    dataPoint.GetComponent<Renderer>().material.color = outlierColor;
+                    if (outlierColorVal == "Default")
+                    {
+                        dataPoint.GetComponent<Renderer>().material.color = outlierColor;
+                    }
+                    else
+                    {
+                        dataPoint.GetComponent<Renderer>().material.color = colorMap[outlierColorVal];
+                    }
+                    //dataPoint.GetComponent<Renderer>().material.color = outlierColor;
                     dataPoint.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
                     dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", outlierColor);
                 }
                 else
                 {
-                    dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
+                    if (dataPointColor == "Default")
+                    {
+                        dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
+                    }
+                    else
+                    {
+                        dataPoint.GetComponent<Renderer>().material.color = colorMap[dataPointColor];
+                    }
+                    //dataPoint.GetComponent<Renderer>().material.color = new Color(x, y, z, 1.0f);
                     dataPoint.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-                    dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(x, y, z, 1.0f));
+
+                    if (dataPointColor == "Default")
+                    {
+                        dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(x, y, z, 1.0f));
+                    }
+                    else
+                    {
+                        dataPoint.GetComponent<Renderer>().material.SetColor("_EmissionColor", colorMap[dataPointColor]);
+                    }
                 }
             }
         }
@@ -662,11 +749,25 @@ public class PointRenderer : MonoBehaviour
             // Check if the point is an outlier
             if (outlierIndices.Contains(i))
             {
-                particlePoints[i].startColor = outlierColor;
+                if (outlierColorVal == "Default")
+                {
+                    particlePoints[i].startColor = outlierColor;
+                }
+                else
+                {
+                    particlePoints[i].startColor = colorMap[outlierColorVal];
+                }
             }
             else
             {
-                particlePoints[i].startColor = new Color(x, y, z, 1.0f);
+                if (dataPointColor == "Default")
+                {
+                    particlePoints[i].startColor = new Color(x, y, z, 1.0f);
+                }
+                else
+                {
+                    particlePoints[i].startColor = colorMap[dataPointColor];
+                }
             }
 
             particlePoints[i].startSize = particleScale;

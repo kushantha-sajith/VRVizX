@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
+using TMPro;
 
 public class ColumnReader : MonoBehaviour
 {
     // The dropdowns for selecting X, Y, Z axis
-    public Dropdown xAxisDropdown;
-    public Dropdown yAxisDropdown;
-    public Dropdown zAxisDropdown;
+    public TMP_Dropdown xAxisDropdown;
+    public TMP_Dropdown yAxisDropdown;
+    public TMP_Dropdown zAxisDropdown;
 
     void Start()
     {
@@ -52,10 +53,13 @@ public class ColumnReader : MonoBehaviour
         yAxisDropdown.ClearOptions();
         zAxisDropdown.ClearOptions();
 
+        // Create a new list with "--SELECT--" as the first option
+        List<string> dropdownOptions = new List<string> { "--SELECT--" };
+        dropdownOptions.AddRange(columnNames);
+
         // Add options to the dropdowns
-        xAxisDropdown.AddOptions(columnNames);
-        yAxisDropdown.AddOptions(columnNames);
-        zAxisDropdown.AddOptions(columnNames);
+        xAxisDropdown.AddOptions(dropdownOptions);
+        yAxisDropdown.AddOptions(dropdownOptions);
+        zAxisDropdown.AddOptions(dropdownOptions);
     }
 }
-

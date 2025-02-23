@@ -19,15 +19,24 @@ public class ScatterplotController : MonoBehaviour
     [SerializeField] private TeleportationProvider teleportationProvider; // Reference to TeleportationProvider
     [SerializeField] private ActionBasedContinuousTurnProvider continuousTurnProvider; // Reference to ContinuousTurnProvider
     [SerializeField] private ActionBasedSnapTurnProvider snapTurnProvider; // Reference to SnapTurnProvider
+    [SerializeField] private InputActionProperty resetButton;
 
     private Transform scatterplotTransform;
 
     private float currentZoom = 0.2f;  // Track the current zoom level
     private float previousZoomInput = 0f;  // Store the last zoom input to prevent large jumps
 
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+    private Vector3 initialScale;
+
     private void Start()
     {
         scatterplotTransform = this.transform;
+
+        initialPosition = scatterplotTransform.position;
+        initialRotation = scatterplotTransform.rotation;
+        initialScale = scatterplotTransform.localScale;
     }
 
     private void Update()
@@ -35,6 +44,7 @@ public class ScatterplotController : MonoBehaviour
         HandleRotation();
         HandleZoom();
         HandleLocomotion();
+        HandleReset();
     }
 
     private void HandleRotation()
@@ -141,5 +151,25 @@ public class ScatterplotController : MonoBehaviour
                 snapTurnProvider.enabled = true;
             }
         }
+    }
+
+    private void HandleReset()
+    {
+        // Check if the reset button is pressed
+        if (resetButton.action.ReadValue<float>() > 0.5f)
+        {
+            ResetScatterplot();
+        }
+    }
+
+    private void ResetScatterplot()
+    {
+        // Reset the scatterplot to its initial state
+        scatterplotTransform.position = initialPosition;
+        scatterplotTransform.rotation = initialRotation;
+        scatterplotTransform.localScale = initialScale;
+
+        // Reset the current zoom level
+        currentZoom = initialScale.x; // Assuming uniform scaling
     }
 }

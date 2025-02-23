@@ -5,12 +5,17 @@ using TMPro;
 public class DynamicMenu : MonoBehaviour
 {
     public TMP_Dropdown mainDropdown; // Reference to the main dropdown
-    public GameObject submenu1;   // Reference to the first submenu panel
-    public GameObject submenu2;   // Reference to the second submenu panel
-    public GameObject submenu3;   // Reference to the third submenu panel
-    public Button confirmButton;  // Reference to the confirmation button
-    public TextMeshProUGUI warningText;      // Reference to the warning message text
-    public GameObject mainPanel;  // Reference to the main panel
+    public GameObject submenu1;       // Reference to the first submenu panel
+    public GameObject submenu2;       // Reference to the second submenu panel
+    public GameObject submenu3;       // Reference to the third submenu panel
+    public Button confirmButton;      // Reference to the confirmation button
+    public TextMeshProUGUI warningText; // Reference to the warning message text
+    public GameObject mainPanel;      // Reference to the main panel
+    public GameObject scatterPlot;
+
+    // Sound effects
+    public AudioClip dropdownClickSound; // Sound for dropdown clicks
+    public AudioClip buttonClickSound;   // Sound for button clicks
 
     private int selectedIndex = -1; // Store the selected dropdown index
 
@@ -20,6 +25,7 @@ public class DynamicMenu : MonoBehaviour
         submenu1.SetActive(false);
         submenu2.SetActive(false);
         submenu3.SetActive(false);
+        scatterPlot.SetActive(false);
 
         // Hide the warning message initially
         warningText.gameObject.SetActive(false);
@@ -33,6 +39,16 @@ public class DynamicMenu : MonoBehaviour
 
     void OnDropdownValueChanged(int index)
     {
+        // Play dropdown click sound using AudioManager
+        if (AudioManager.Instance != null && dropdownClickSound != null)
+        {
+            AudioManager.Instance.PlaySound(dropdownClickSound);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager instance or dropdown click sound is missing!");
+        }
+
         // Store the selected index
         selectedIndex = index - 1;
 
@@ -42,6 +58,16 @@ public class DynamicMenu : MonoBehaviour
 
     void OnConfirmButtonClicked()
     {
+        // Play button click sound using AudioManager
+        if (AudioManager.Instance != null && buttonClickSound != null)
+        {
+            AudioManager.Instance.PlaySound(buttonClickSound);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager instance or button click sound is missing!");
+        }
+
         // Disable all submenus first
         submenu1.SetActive(false);
         submenu2.SetActive(false);

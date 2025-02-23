@@ -8,9 +8,13 @@ public class ScatterplotPointUIHandler : MonoBehaviour
     private GameObject labelInstance; // Instance of the label
 
     private Color initialColor; // Store the initial color of the scatterplot point
+    private Vector3 initialScale; // Store the initial scale of the scatterplot point
     private Renderer pointRenderer; // Renderer component of the scatterplot point
 
     private XRBaseInteractable interactable; // Reference to the XRBaseInteractable component
+
+    public AudioClip clickSound;  // Sound for clicks
+    public AudioSource audioSource;
 
     private void Start()
     {
@@ -24,6 +28,9 @@ public class ScatterplotPointUIHandler : MonoBehaviour
             // Store the initial color of the scatterplot point
             initialColor = pointRenderer.material.color;
         }
+
+        // Store the initial scale of the scatterplot point
+        initialScale = transform.localScale;
 
         // Get the XRBaseInteractable component
         interactable = GetComponent<XRBaseInteractable>();
@@ -41,8 +48,12 @@ public class ScatterplotPointUIHandler : MonoBehaviour
         // Change the color of the scatterplot point when hovered
         if (pointRenderer != null)
         {
-            pointRenderer.material.color = Color.red; // Change to red (or any other color)
+            // Create a new material instance to avoid affecting other objects
+            pointRenderer.material.SetColor("_Color", Color.red);
         }
+
+        // Increase the size of the scatterplot point when hovered
+        transform.localScale = initialScale * 1.5f; // Scale up by 20%
 
         // Trigger haptic feedback
         TriggerHapticFeedback(args.interactorObject);
@@ -53,13 +64,26 @@ public class ScatterplotPointUIHandler : MonoBehaviour
         // Reset the color of the scatterplot point when hover ends
         if (pointRenderer != null)
         {
-            pointRenderer.material.color = initialColor;
+            pointRenderer.material.SetColor("_Color", initialColor);
         }
+
+        // Reset the size of the scatterplot point when hover ends
+        transform.localScale = initialScale;
     }
 
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
         Debug.Log("ScatterplotPointUIHandler script started.");
+
+        // Play a click sound
+        if (clickSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+        else
+        {
+            Debug.LogError("Click sound or audio source not set.");
+        }
 
         // Get the selected scatterplot point's data            
         ScatterplotPointData pointData = args.interactableObject.transform.GetComponent<ScatterplotPointData>();
@@ -68,9 +92,6 @@ public class ScatterplotPointUIHandler : MonoBehaviour
             // Update the UI with the point's x, y, z data
             string labelText = $"X: {pointData.xValue:F2}\nY: {pointData.yValue:F2}\nZ: {pointData.zValue:F2}";
             Debug.Log($"Point Data: {labelText}");
-
-            // Instantiate the label prefab
-            //labelInstance = Instantiate(labelPrefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
 
             // Calculate a position in front of the user's camera
             Vector3 labelPosition = CalculateLabelPositionInFrontOfUser();
