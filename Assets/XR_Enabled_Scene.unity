@@ -10546,6 +10546,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
+  pivotPoint: {fileID: 0}
 --- !u!1 &330794713
 GameObject:
   m_ObjectHideFlags: 0
@@ -27462,7 +27463,7 @@ Transform:
   m_GameObject: {fileID: 931324292}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 6.91, z: -1.92}
+  m_LocalPosition: {x: 0, y: 6.91, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30073,7 +30074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a11d6e0c766e5d4bb4a88afb32fb207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 50
+  rotationSpeed: 25
   zoomSpeed: 0.1
   minZoom: 0.1
   maxZoom: 1.5
@@ -30147,6 +30148,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: 7493892103959685042, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
+  pivotPoint: {fileID: 1724809156}
 --- !u!1 &1019467768
 GameObject:
   m_ObjectHideFlags: 0
@@ -39104,8 +39106,11 @@ MonoBehaviour:
       type: 3}
   menu: {fileID: 2087627522}
   panel: {fileID: 203513186}
+  confirmationUI: {fileID: 1950507268}
   cameraTransform: {fileID: 1711077965}
   distanceFromCamera: 1
+  yesButton: {fileID: 535573854}
+  noButton: {fileID: 1755418091}
 --- !u!4 &1302772947
 Transform:
   m_ObjectHideFlags: 0
@@ -50431,6 +50436,37 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5a9383dda6cabc047b7a297602e93eb4, type: 3}
   - {fileID: 8300000, guid: e9714160ce34f2b4ab63ff8c27bd68e1, type: 3}
   audioSource: {fileID: 1711077969}
+--- !u!1 &1724809155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1724809156}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1724809156
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724809155}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.203, y: 1.2780354, z: -7.819}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1731574879
 GameObject:
   m_ObjectHideFlags: 0
@@ -61719,7 +61755,7 @@ GameObject:
   - component: {fileID: 1950507270}
   - component: {fileID: 1950507275}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: Confirmation UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72690,3 +72726,4 @@ SceneRoots:
   - {fileID: 1501566545}
   - {fileID: 2087627529}
   - {fileID: 1302772947}
+  - {fileID: 1724809156}

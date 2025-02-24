@@ -8,12 +8,10 @@ public class ScatterplotController : MonoBehaviour
     public float zoomSpeed = 0.1f;     // Adjust zoom speed (this controls how fast zoom happens)
     public float minZoom = 0.1f;       // Minimum scale
     public float maxZoom = 1.5f;       // Maximum scale
-
     [SerializeField] private InputActionProperty rightHandPrimaryAxis;  // Rotation input
     [SerializeField] private InputActionProperty leftHandPrimaryAxis;   // Zoom input
     [SerializeField] private InputActionProperty rightGripButton;  // Grip button to control rotation and locomotion
     [SerializeField] private InputActionProperty leftGripButton;   // Grip button to control zoom
-
     [SerializeField] private LocomotionSystem locomotionSystem;
     [SerializeField] private ContinuousMoveProviderBase continuousMoveProvider; // Reference to ContinuousMoveProvider
     [SerializeField] private TeleportationProvider teleportationProvider; // Reference to TeleportationProvider
@@ -21,11 +19,11 @@ public class ScatterplotController : MonoBehaviour
     [SerializeField] private ActionBasedSnapTurnProvider snapTurnProvider; // Reference to SnapTurnProvider
     [SerializeField] private InputActionProperty resetButton;
 
-    private Transform scatterplotTransform;
+    [SerializeField] private Transform pivotPoint; // The pivot point around which the scatterplot will rotate
 
+    private Transform scatterplotTransform;
     private float currentZoom = 0.2f;  // Track the current zoom level
     private float previousZoomInput = 0f;  // Store the last zoom input to prevent large jumps
-
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     private Vector3 initialScale;
@@ -33,10 +31,15 @@ public class ScatterplotController : MonoBehaviour
     private void Start()
     {
         scatterplotTransform = this.transform;
-
         initialPosition = scatterplotTransform.position;
         initialRotation = scatterplotTransform.rotation;
         initialScale = scatterplotTransform.localScale;
+
+        // Ensure the pivot point is assigned in the Inspector
+        if (pivotPoint == null)
+        {
+            Debug.LogError("Pivot Point is not assigned. Please assign a valid Transform in the Inspector.");
+        }
     }
 
     private void Update()
@@ -50,26 +53,25 @@ public class ScatterplotController : MonoBehaviour
     private void HandleRotation()
     {
         // Only allow rotation if the grip button is pressed
-        if (rightGripButton.action.ReadValue<float>() > 0.5f)
+        if (rightGripButton.action.ReadValue<float>() > 0.5f && pivotPoint != null)
         {
             // Get rotation input from the right-hand controller's primary 2D axis
             Vector2 primaryAxis = rightHandPrimaryAxis.action.ReadValue<Vector2>();
-
             float horizontalRotation = primaryAxis.x * rotationSpeed * Time.deltaTime;
             float verticalRotation = -primaryAxis.y * rotationSpeed * Time.deltaTime;
 
-            // Rotate the object around its own center (local space rotation)
-            RotateAroundCenter(scatterplotTransform, horizontalRotation, verticalRotation);
+            // Rotate the scatterplot around the pivot point
+            RotateAroundPivot(horizontalRotation, verticalRotation);
         }
     }
 
-    private void RotateAroundCenter(Transform target, float horizontalRotation, float verticalRotation)
+    private void RotateAroundPivot(float horizontalRotation, float verticalRotation)
     {
         // Rotate around the Y-axis (horizontal rotation)
-        target.Rotate(Vector3.up, horizontalRotation, Space.World);
+        scatterplotTransform.RotateAround(pivotPoint.position, Vector3.up, horizontalRotation);
 
         // Rotate around the X-axis (vertical rotation)
-        target.Rotate(Vector3.right, verticalRotation, Space.Self);
+        scatterplotTransform.RotateAround(pivotPoint.position, scatterplotTransform.right, verticalRotation);
     }
 
     private void HandleZoom()
@@ -78,7 +80,6 @@ public class ScatterplotController : MonoBehaviour
         {
             // Get zoom input from the left-hand controller's primary 2D axis (vertical axis for zoom)
             Vector2 primaryAxis = leftHandPrimaryAxis.action.ReadValue<Vector2>();
-
             // Use the vertical axis (Y) for zooming (up-down direction)
             float zoomInput = primaryAxis.y;
 
@@ -87,14 +88,11 @@ public class ScatterplotController : MonoBehaviour
             {
                 // Apply gradual zooming based on zoom input and zoom speed
                 currentZoom += zoomInput * zoomSpeed;
-
                 // Clamp the zoom to the minimum and maximum zoom limits
                 currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
-
                 // Apply the zoom to the object's scale
                 scatterplotTransform.localScale = Vector3.one * currentZoom;
             }
-
             // Store the current zoom input for the next frame to prevent large jumps
             previousZoomInput = zoomInput;
         }
@@ -168,7 +166,6 @@ public class ScatterplotController : MonoBehaviour
         scatterplotTransform.position = initialPosition;
         scatterplotTransform.rotation = initialRotation;
         scatterplotTransform.localScale = initialScale;
-
         // Reset the current zoom level
         currentZoom = initialScale.x; // Assuming uniform scaling
     }
