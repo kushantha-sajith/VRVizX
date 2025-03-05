@@ -27,6 +27,7 @@ public class ScatterplotController : MonoBehaviour
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     private Vector3 initialScale;
+    private Vector3 initialPivotPointScale;
 
     private void Start()
     {
@@ -34,6 +35,7 @@ public class ScatterplotController : MonoBehaviour
         initialPosition = scatterplotTransform.position;
         initialRotation = scatterplotTransform.rotation;
         initialScale = scatterplotTransform.localScale;
+        initialPivotPointScale = pivotPoint.localScale;
 
         // Ensure the pivot point is assigned in the Inspector
         if (pivotPoint == null)
@@ -92,6 +94,7 @@ public class ScatterplotController : MonoBehaviour
                 currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
                 // Apply the zoom to the object's scale
                 scatterplotTransform.localScale = Vector3.one * currentZoom;
+                pivotPoint.localScale = Vector3.one * currentZoom;
             }
             // Store the current zoom input for the next frame to prevent large jumps
             previousZoomInput = zoomInput;
@@ -166,6 +169,7 @@ public class ScatterplotController : MonoBehaviour
         scatterplotTransform.position = initialPosition;
         scatterplotTransform.rotation = initialRotation;
         scatterplotTransform.localScale = initialScale;
+        pivotPoint.localScale = initialPivotPointScale;
         // Reset the current zoom level
         currentZoom = initialScale.x; // Assuming uniform scaling
     }

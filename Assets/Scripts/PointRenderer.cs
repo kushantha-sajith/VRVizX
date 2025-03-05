@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // This script gets values from CSVReader script
@@ -565,6 +566,9 @@ public class PointRenderer : MonoBehaviour
     {
         rowCount = pointList.Count;
 
+        // Get the list of colors from the colorMap dictionary
+        Color[] clusterColors = colorMap.Values.ToArray();
+
         for (int i = 0; i < pointList.Count; i++)
         {
             float x = (Convert.ToSingle(pointList[i][xColumnName]) - xMin) / (xMax - xMin);
@@ -587,9 +591,14 @@ public class PointRenderer : MonoBehaviour
             dataPoint.transform.localPosition = position;
             dataPoint.transform.localScale = new Vector3(pointScale, pointScale, pointScale);
 
-            // Color based on cluster assignment
+            // Color based on cluster assignment using colorMap
             int cluster = clusterAssignments[i];
-            dataPoint.GetComponent<Renderer>().material.color = clusterColors[cluster];
+            Color clusterColor;
+
+            // Use modulo to cycle through colors if there are more clusters than colors
+            clusterColor = clusterColors[cluster % clusterColors.Length];
+
+            dataPoint.GetComponent<Renderer>().material.color = clusterColor;
         }
     }
 
