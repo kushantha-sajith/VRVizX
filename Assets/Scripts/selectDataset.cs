@@ -41,10 +41,9 @@ public class selectDataset : MonoBehaviour
                         Debug.Log("CSV File Selected: " + selectedFilePath);
                         string[] csvLines = File.ReadAllLines(selectedFilePath);
 
-                        /*var processor = GetComponent<CSVProcessor>();
+                        var processor = GetComponent<CSVProcessor>();
                         if (processor != null)
-                            processor.ProcessCSV(csvLines);
-                        */
+                            processor.ProcessCSV(selectedFilePath);
                     }
                     else
                     {

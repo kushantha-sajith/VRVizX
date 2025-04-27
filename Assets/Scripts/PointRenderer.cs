@@ -110,8 +110,7 @@ public class PointRenderer : MonoBehaviour
 
     void Awake()
     {
-        //Run CSV Reader
-        pointList = CSVReader.Read(inputfile);
+        //pointList = CSVReader.Read(inputfile);
     }
 
     private void ClearScatterplot()
@@ -133,6 +132,26 @@ public class PointRenderer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        inputfile = DataManager.Instance.fileName;
+        // Read in the CSV file
+        List<Dictionary<string, object>> pointList = new List<Dictionary<string, object>>();
+
+        for (int i = 0; i < DataManager.Instance.numericalData.Count; i++)
+        {
+            Dictionary<string, object> entry = new Dictionary<string, object>();
+
+            for (int j = 0; j < DataManager.Instance.headers.Count; j++)
+            {
+                string header = DataManager.Instance.headers[j];
+                float value = DataManager.Instance.numericalData[i][j];
+
+                entry[header] = value;
+            }
+
+            pointList.Add(entry);
+        }
+        this.pointList = pointList;
+
         colorMap = new Dictionary<string, Color>
         {
             { "Black", Color.black },

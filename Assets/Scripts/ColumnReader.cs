@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
@@ -43,6 +43,51 @@ public class ColumnReader : MonoBehaviour
         }
 
         return columnNames;
+    }
+
+    // Method to populate the dropdowns with column names
+    void PopulateDropdowns(List<string> columnNames)
+    {
+        // Clear existing options
+        xAxisDropdown.ClearOptions();
+        yAxisDropdown.ClearOptions();
+        zAxisDropdown.ClearOptions();
+
+        // Create a new list with "--SELECT--" as the first option
+        List<string> dropdownOptions = new List<string> { "--SELECT--" };
+        dropdownOptions.AddRange(columnNames);
+
+        // Add options to the dropdowns
+        xAxisDropdown.AddOptions(dropdownOptions);
+        yAxisDropdown.AddOptions(dropdownOptions);
+        zAxisDropdown.AddOptions(dropdownOptions);
+    }
+}*/
+
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using TMPro;
+
+public class ColumnReader : MonoBehaviour
+{
+    // The dropdowns for selecting X, Y, Z axis
+    public TMP_Dropdown xAxisDropdown;
+    public TMP_Dropdown yAxisDropdown;
+    public TMP_Dropdown zAxisDropdown;
+
+    void Start()
+    {
+        // Make sure DataManager is loaded
+        if (DataManager.Instance == null || DataManager.Instance.headers == null)
+        {
+            Debug.LogError("DataManager not initialized or no headers available.");
+            return;
+        }
+
+        List<string> columnNames = DataManager.Instance.headers;
+
+        PopulateDropdowns(columnNames);
     }
 
     // Method to populate the dropdowns with column names
