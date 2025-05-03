@@ -82,7 +82,7 @@ public class PointRenderer : MonoBehaviour
     // Particle system for holding point particles
     private ParticleSystem.Particle[] particlePoints;
 
-    public Color outlierColor = Color.black;
+    public Color outlierColor = Color.white;
 
     private List<int> outlierIndices = new List<int>();
 

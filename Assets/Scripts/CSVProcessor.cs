@@ -139,11 +139,27 @@ public class CSVProcessor : MonoBehaviour
 
         List<string> allHeaders = new List<string>(pointList[0].Keys);
         List<string> numericHeaders = new List<string>();
+        float numericThreshold = 0.9f; // At least 90% values should be numeric
 
-        // Identify quantitative (numerical) headers
+        // Identify practical quantitative (numerical) headers
         foreach (string header in allHeaders)
         {
-            if (pointList[0][header] is float || pointList[0][header] is int)
+            int validNumericCount = 0;
+
+            foreach (var row in pointList)
+            {
+                if (row.TryGetValue(header, out object value) && value != null)
+                {
+                    string str = value.ToString().Trim();
+                    if (float.TryParse(str, out _))
+                    {
+                        validNumericCount++;
+                    }
+                }
+            }
+
+            float ratio = (float)validNumericCount / pointList.Count;
+            if (ratio >= numericThreshold)
             {
                 numericHeaders.Add(header);
             }
@@ -154,7 +170,7 @@ public class CSVProcessor : MonoBehaviour
         float[] columnSums = new float[columnCount];
         int[] validCounts = new int[columnCount];
 
-        // Extract numerical values and compute column means
+        // Extract numerical values and compute column sums
         foreach (var row in pointList)
         {
             float[] rowData = new float[columnCount];
@@ -167,15 +183,14 @@ public class CSVProcessor : MonoBehaviour
 
                 if (rawValue != null)
                 {
-                    try
+                    string rawStr = rawValue.ToString().Trim();
+                    if (float.TryParse(rawStr, out float val))
                     {
-                        float val = Convert.ToSingle(rawValue);
                         rowData[i] = val;
                         columnSums[i] += val;
                         validCounts[i]++;
                         valid = true;
                     }
-                    catch { /* leave as 0 */ }
                 }
 
                 if (!valid && missingValueStrategy == MissingValueStrategy.Zero)
@@ -200,9 +215,12 @@ public class CSVProcessor : MonoBehaviour
             {
                 for (int c = 0; c < columnCount; c++)
                 {
-                    if (validCounts[c] == 0) continue; // skip if no valid data
+                    if (validCounts[c] == 0) continue;
 
-                    if (dataRows[r][c] == 0f && !pointList[r][numericHeaders[c]].ToString().Equals("0"))
+                    string originalValue = pointList[r][numericHeaders[c]]?.ToString()?.Trim() ?? "";
+                    bool originallyMissing = string.IsNullOrEmpty(originalValue) || !float.TryParse(originalValue, out _);
+
+                    if (dataRows[r][c] == 0f && originallyMissing)
                     {
                         dataRows[r][c] = columnMeans[c];
                     }

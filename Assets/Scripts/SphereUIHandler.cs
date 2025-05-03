@@ -117,8 +117,8 @@ public class ScatterplotPointUIHandler : MonoBehaviour
                 labelInstance.transform.rotation = Quaternion.LookRotation(labelInstance.transform.position - Camera.main.transform.position);
             }
 
-            // Destroy the label after 5 seconds
-            Destroy(labelInstance, 5f);
+            // Destroy the label after 3 seconds
+            Destroy(labelInstance, 3f);
         }
 
         // Trigger haptic feedback on selection

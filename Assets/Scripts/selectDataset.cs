@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleFileBrowser;
 using System.IO;
+using TMPro;
 
 public class selectDataset : MonoBehaviour
 {
     public GameObject fileSelectionUI;
     public GameObject filePickerUI;
+    public TextMeshProUGUI warningText;
+    public GameObject mainPanel;
 
     public void Start()
     {
@@ -48,6 +51,9 @@ public class selectDataset : MonoBehaviour
                     else
                     {
                         Debug.Log("Selected file is not a CSV file.");
+                        mainPanel.gameObject.SetActive(true);
+                        warningText.text = "Selected file is not a CSV file.";
+                        warningText.gameObject.SetActive(true);
                     }
                 }
             },
